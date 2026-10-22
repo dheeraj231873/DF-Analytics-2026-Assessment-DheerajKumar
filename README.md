@@ -21,8 +21,9 @@ The dataset includes global active power, global reactive power, voltage, global
 7. Trained Linear Regression models and evaluated them using chronological 80/20 train-test splits.
 8. Trained a Random Forest Regressor for daily energy consumption forecasting and evaluated it using the same training and testing data as the daily Linear Regression model.
 9. Compared the daily forecasting results against a Naive Baseline, Linear Regression, and Random Forest using MAE and RMSE.
-10. Exported future predictions as CSV files.
-11. Exposed hourly energy prediction through a FastAPI endpoint.
+10. Performed five-fold time-series cross-validation to evaluate daily forecasting performance across multiple chronological splits.
+11. Exported future predictions as CSV files.
+12. Exposed hourly energy prediction through a FastAPI endpoint.
 
 ## Forecasting Models and Evaluation
 
@@ -49,7 +50,21 @@ The Naive Baseline uses the previous day's consumption as a prediction for the n
 
 Random Forest achieved the lowest MAE and RMSE among the three approaches on the evaluated daily test set. Compared with Linear Regression, it reduced MAE by approximately 5.8% and RMSE by approximately 4.9%.
 
-These results indicate that Random Forest performed better on this particular test set. Further time-based backtesting is needed to assess performance across different forecast origins and periods.
+These results indicate that Random Forest performed better on this particular test set. However, performance can vary across different time periods, so the model should not be assumed to perform best in every forecasting scenario.
+
+### Five-Fold Time-Series Backtesting
+
+Five-fold time-series cross-validation was performed using `TimeSeriesSplit` to evaluate daily energy forecasting across multiple chronological splits.
+
+| Backtesting metric |                                 Result |
+| ------------------ | -------------------------------------: |
+| Average MAE        |                              5.136 kWh |
+| Average RMSE       |                              6.721 kWh |
+| Validation method  | Five-fold time-series cross-validation |
+
+In this approach, the model is trained on earlier observations and evaluated on later observations across five splits. The average MAE and RMSE summarize prediction errors across those splits.
+
+The backtesting results provide additional evidence of model performance across different chronological periods. They should be interpreted separately from the original 80/20 test-set results because the evaluation splits differ.
 
 The evaluation metrics represent predictions on held-out chronological test observations. The minute-level and hourly metrics use observed historical lag values, so they should not be interpreted as the accuracy of the complete recursive forecast horizon.
 
@@ -92,8 +107,9 @@ The `POST /predict/hourly-energy` endpoint accepts lag and calendar features as 
 * Incomplete days and hours are excluded from the respective aggregated datasets.
 * Time-based interpolation estimates missing internal readings; these estimates are not actual measurements.
 * The models use Linear Regression and manually selected lag and calendar features. Random Forest was additionally evaluated for daily energy forecasting.
+* Five-fold time-series cross-validation was used to evaluate daily forecasting performance across chronological splits.
 * Recursive forecasts can accumulate errors as predictions become inputs to subsequent predictions.
-* Evaluation results reflect the selected chronological test split and may not generalize to other households or time periods.
+* Evaluation results reflect the selected chronological test split and validation folds and may not generalize to other households or time periods.
 * The API currently exposes a single hourly energy-consumption prediction endpoint.
 
 ## Recommendations
@@ -109,4 +125,4 @@ This project uses the household electricity consumption dataset supplied for the
 
 ## AI Assistance Disclosure
 
-This project was developed using my own understanding and decision-making, with limited assistance from AI in coding, data analysis, forecasting, debugging, API development, and documentation.
+This project was developed with AI assistance for coding, data analysis, forecasting, debugging, API development, and documentation. The final disclosure should accurately reflect the extent of AI assistance used and comply with the assessment instructions.
