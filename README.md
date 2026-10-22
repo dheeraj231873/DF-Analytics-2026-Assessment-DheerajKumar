@@ -80,3 +80,16 @@ The `POST /predict/hourly-energy` endpoint accepts lag and calendar features as 
 * Evaluate complete recursive forecast horizons using rolling-origin backtesting.
 * Investigate additional time-series models and tune features using validation data.
 * Monitor prediction errors before using forecasts for operational decisions.
+
+### Dataset Download Instructions
+
+The Household Electric Power Consumption dataset is available from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/235/individual+household+electric+power+consumption).
+
+Download the dataset and place `household_power_consumption.txt` inside the project's `data/` directory before running the notebook. The raw dataset is not included in this repository.
+
+## AI Assistance Disclosure
+
+This project was developed using my own understanding and decision-making, with limited assistance from AI in coding, data analysis, forecasting, debugging, API development, and documentation. 
+
+
+
