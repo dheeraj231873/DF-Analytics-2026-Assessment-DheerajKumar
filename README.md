@@ -70,17 +70,36 @@ The evaluation metrics represent predictions on held-out chronological test obse
 
 ## Generated Outputs
 
-The `outputs/` directory contains:
+The `outputs/` directory contains nine forecast CSV files and the saved hourly energy model.
 
-* `global_active_power_next_60_minutes.csv`
-* `energy_consumption_next_24_hours.csv`
-* `sub_metering_3_next_24_hours.csv`
-* `energy_consumption_next_7_days.csv`
-* `hourly_energy_model.joblib`
+### Global Active Power
 
-The forecast files contain model-generated estimates beyond the relevant observed data. Recursive forecasts may accumulate errors over time.
+* `global_active_power_next_60_minutes.csv` — minute-level forecast for the next 60 minutes.
+* `global_active_power_next_24_hours.csv` — hourly forecast for the next 24 hours.
+* `global_active_power_next_7_days.csv` — daily average power forecast for the next 7 days.
 
-The Random Forest model was evaluated separately for daily forecasting. The existing saved hourly model and FastAPI endpoint continue to use the hourly Linear Regression model.
+### Energy Consumption
+
+* `energy_consumption_next_60_minutes.csv` — minute-level energy estimates for the next 60 minutes.
+* `energy_consumption_next_24_hours.csv` — hourly energy forecast for the next 24 hours.
+* `energy_consumption_next_7_days.csv` — daily energy forecast for the next 7 days.
+
+### Sub-metering 3
+
+* `sub_metering_3_next_60_minutes.csv` — minute-level forecast for the next 60 minutes.
+* `sub_metering_3_next_24_hours.csv` — hourly forecast for the next 24 hours.
+* `sub_metering_3_next_7_days.csv` — daily average forecast for the next 7 days.
+
+### Saved Model
+
+* `hourly_energy_model.joblib` — trained hourly Linear Regression model used by the FastAPI endpoint.
+
+The forecasts use different approaches, including trained regression models and simple baseline methods. Their accuracy has not been independently established for every forecast horizon. Recursive forecasts may accumulate errors over time.
+
+The minute-level energy estimates are derived from predicted power values. The sub-metering forecasts represent the original sub-metering measurement, not kWh.
+
+The saved hourly model and FastAPI endpoint currently support a single hourly energy-consumption prediction rather than all forecast targets and horizons.
+
 
 ## FastAPI Usage
 
